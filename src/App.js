@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { Row, Col, Card } from 'antd'
+import axios from 'axios'
 import './App.css'
 
 const COLORS = {
@@ -16,10 +18,31 @@ const COLORS = {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      pokemons: []
+    }
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:3030/api/cards').then((res) => {
+      const { data: { cards } } = res
+      this.setState({ pokemons: cards })
+    })
+  }
+
   render() {
+    const { pokemons } = this.state
+    console.log(pokemons)
     return (
-      <div className="App">
-      </div>
+      <Row style={{ height: 712, overflowY: 'scroll' }}>
+        {pokemons.map(({ name }) => (
+          <Col span={24}>
+            <Card>{name}</Card>
+          </Col>
+        ))}
+      </Row>
     )
   }
 }
